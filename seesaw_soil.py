@@ -1,4 +1,6 @@
-import sys, signal, time, numpy
+import sys, signal, time
+from datetime import datetime, timezone
+dt, tz = datetime, timezone
 def signal_handler(signal, frame):
     print("\nprogram exiting gracefully")
     sys.exit(0)
@@ -11,21 +13,16 @@ import busio
 from adafruit_seesaw.seesaw import Seesaw
 
 i2c_bus = busio.I2C(SCL, SDA)
-
+mmin, mmax, tv = 200, 2000, 0.7
+twet = ttemp = 0
 ss = Seesaw(i2c_bus, addr=0x36)
 while True:
-    touch=[]
-    temp=[]
-    while len(touch)<5:
-        touch.append(int(ss.moisture_read()))
-        temp.append(int(ss.get_temp()))
-        time.sleep(1)
-    # read moisture level through capacitive touch pad
-    touch = int(numpy.mean(touch))
-
-    # read temperature from the temperature sensor
-    temp = int(numpy.mean(temp))
-
-    print("temp: " + str(temp) + "  moisture: " + str(touch))
+    now = dt.now(tz.utc)
+    wet = int(((ss.moisture_read() - mmin)*100)/(mmax-mmin))
+    temp = float("{:.1f}".format(ss.get_temp()))
+    #temp = int((ss.get_temp() * 9/5) + 32)
+    if twet > wet+1 or twet < wet-1 or ttemp > temp+tv or ttemp < temp-tv:
+        print("{},{},{}".format(now,temp,wet))
+        ttemp, twet = temp, wet
     time.sleep(1)
 
