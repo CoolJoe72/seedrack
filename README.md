@@ -13,8 +13,8 @@ This project is intended to setup a way to start garden pants from seed with aut
  - 4-Tier 48" x 18" x 72" NSF Wire Rack
  - Raspberry Pi
  - 2x Dallas DS1820
- - 2x Seesaw I2C Soil Sensors
- - 2x TB6612
+ - 2x [Adafruit STEMMA Soil Sensor](https://www.adafruit.com/product/4026)
+ - 2x [TB6612](https://www.adafruit.com/product/2448)
  - 2x Water Pumps
  - 8x Computer Fans
  - 4x shop lights
